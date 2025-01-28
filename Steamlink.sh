@@ -18,6 +18,7 @@ get_controls
 
 # Variables
 GAMEDIR="/$directory/ports/steamlink"
+QT_VERSION=5.14.1
 
 # CD and set permissions
 cd $GAMEDIR
@@ -25,9 +26,14 @@ cd $GAMEDIR
 $ESUDO chmod +x -R $GAMEDIR/*
 
 # Exports
-export LD_LIBRARY_PATH="$GAMEDIR/lib:$GAMEDIR/Qt-5.14.1/lib:$LD_LIBRARY_PATH"
-export GROUP="plugdev"
-export MODE="0660"
+export LD_LIBRARY_PATH="$GAMEDIR/lib:$GAMEDIR/Qt-$QT_VERSION/lib:$LD_LIBRARY_PATH"
+export QT_PLUGIN_PATH="$GAMEDIR/$QT_VERSION/plugins"
+export QT_DEBUG_PLUGINS=1
+if [ "$DISPLAY" = "" ]; then
+    export QT_QPA_PLATFORM="linuxfb"
+else
+    export QT_QPA_PLATFORM="xcb"
+fi
 
 # Assign gptokeyb and load the game
 pm_platform_helper "$GAMEDIR/bin/shell" >/dev/null
